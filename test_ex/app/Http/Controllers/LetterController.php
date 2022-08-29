@@ -4,17 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Letter;
+use Illuminate\Support\Facades\Auth;
 
 class LetterController extends Controller
 {
     public function getIndex() {
-    	return view('main.index');
+        $letters = Letter::all();
+
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            return redirect()->route('managerListLetters', [
+                'letters'=>$letters
+            ]);
+        }
+        else if (auth()->check() && !auth()->user()->isAdmin()) {
+            return view('main.index');
+        }
+        else {
+            return redirect(route('login'));
+        }
+    	
     }
 
     public function postCreate(Request $req) {
+        
         $letter = new Letter([
             'message' => $req->input('message'),
-            'topic' => $req->input('topic')
+            'topic' => $req->input('topic'),
+            'user_id' => Auth::id()
         ]);
         $letter->save();
         return redirect()->route('ReadOwnLetter', [

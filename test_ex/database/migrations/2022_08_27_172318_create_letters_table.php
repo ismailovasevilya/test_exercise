@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('topic');
             $table->text('message');
             $table->boolean('status')->default(false);
+            $table->integer('user_id');
         });
     }
 

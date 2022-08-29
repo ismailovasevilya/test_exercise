@@ -15,6 +15,8 @@ use Illuminate\Validation\Factory;
 |
 */
 
+
+
 Route::get('/', [
 	'uses' => 'App\Http\Controllers\LetterController@getIndex',
 	'as' => 'letterIndex'
@@ -42,3 +44,7 @@ Route::get('/manager', [
 // Route::post('/create', [
 //     'uses': 'App\Http\Controllers\'
 // ]);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

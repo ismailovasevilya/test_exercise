@@ -10,6 +10,7 @@
     <title>Application</title>
 </head>
     <body>
+        @include('navs.navbar')
         <div class="container">
             @yield('adminContent')
             @yield('content')
