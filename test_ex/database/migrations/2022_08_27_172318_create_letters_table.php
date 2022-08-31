@@ -18,7 +18,9 @@ return new class extends Migration
             $table->timestamps();
             $table->string('topic');
             $table->text('message');
+            $table->string('file')->nullable();
             $table->boolean('status')->default(false);
+            $table->integer('user_id');
         });
     }
 

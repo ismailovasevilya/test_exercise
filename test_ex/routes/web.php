@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
+// use App\Http\Middleware\isAdmin;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,11 @@ use Illuminate\Validation\Factory;
 |
 */
 
+
+
 Route::get('/', [
-	'uses' => 'App\Http\Controllers\LetterController@getIndex',
-	'as' => 'letterIndex'
+    'uses' => 'App\Http\Controllers\LetterController@getIndex',
+    'as' => 'letterIndex'
 ]);
 
 Route::post('/', [
@@ -35,10 +38,12 @@ Route::get('/manager', [
     'as' => 'managerListLetters'
 ]);
 
-// Route::get('/manager', function () {
-//     return view('manager.index');
-// });
+Route::post('/manager/post/{id}', [
+    'uses' => 'App\Http\Controllers\LetterController@managerPostLetters',
+    'as' => 'managerPostLetters'
+]);
 
-// Route::post('/create', [
-//     'uses': 'App\Http\Controllers\'
-// ]);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

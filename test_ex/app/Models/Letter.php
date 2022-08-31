@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Letter extends Model
 {
-    protected $fillable = ['topic', 'message', 'status'];
+    protected $fillable = ['topic', 'message', 'status', 'user_id', 'file'];
     use HasFactory;
+
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
 }
