@@ -29,8 +29,9 @@
         <td>{{ $users->find($letter->user_id)->name }} </td>
         <td>{{ $users->find($letter->user_id)->email }}</td>
         <td>{{ $letter->file }}</td>
-        <td><input class="active toggle-class" {{$letter->status == 1 ?'checked':''}} type="checkbox" name="status"></td>
-        <td><input type="submit" value="update"></td>
+        <td><input class="respond {{$letter->status == 1 ?'yes':'no'}}" 
+          type="submit" name="status" {{$letter->status == 1 ?'checked':''}} 
+          value="Respond"></td>
       </form>
     </tr>
     @endforeach

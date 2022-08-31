@@ -17,43 +17,33 @@ use Illuminate\Validation\Factory;
 */
 
 
-// Route::middleware([isAdmin::class])->group(function(){
 
+Route::get('/', [
+    'uses' => 'App\Http\Controllers\LetterController@getIndex',
+    'as' => 'letterIndex'
+]);
 
-    Route::get('/', [
-        'uses' => 'App\Http\Controllers\LetterController@getIndex',
-        'as' => 'letterIndex'
-    ]);
+Route::post('/', [
+    'uses' => 'App\Http\Controllers\LetterController@postCreate',
+    'as' => 'postCreate'
+]);
 
-    Route::post('/', [
-        'uses' => 'App\Http\Controllers\LetterController@postCreate',
-        'as' => 'postCreate'
-    ]);
+Route::get('/sent/{id}', [
+    'uses' => 'App\Http\Controllers\LetterController@ReadOwnLetter',
+    'as' => 'ReadOwnLetter'
+]);
 
-    Route::get('/sent/{id}', [
-        'uses' => 'App\Http\Controllers\LetterController@ReadOwnLetter',
-        'as' => 'ReadOwnLetter'
-    ]);
+Route::get('/manager', [
+    'uses' => 'App\Http\Controllers\LetterController@managerListLetters',
+    'as' => 'managerListLetters'
+]);
 
-    Route::get('/manager', [
-        'uses' => 'App\Http\Controllers\LetterController@managerListLetters',
-        'as' => 'managerListLetters'
-    ]);
+Route::post('/manager/post/{id}', [
+    'uses' => 'App\Http\Controllers\LetterController@managerPostLetters',
+    'as' => 'managerPostLetters'
+]);
 
-    Route::post('/manager/post/{id}', [
-        'uses' => 'App\Http\Controllers\LetterController@managerPostLetters',
-        'as' => 'managerPostLetters'
-    ]);
+Auth::routes();
 
-    // Route::get('/manager', function () {
-    //     return view('manager.index');
-    // });
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    // Route::post('/create', [
-    //     'uses': 'App\Http\Controllers\'
-    // ]);
-
-    Auth::routes();
-
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// });

@@ -13,8 +13,14 @@ use DateTime;
 class LetterController extends Controller
 {
     
-    
     public function getIndex() {
+        
+        /* 
+        If it's a simple user, then he's redirected to '/',
+        if it's manager then he's redirecred to /manager, 
+        if the user isn't authenticated => /login
+        */
+
         $letters = Letter::all();
         if (auth()->check() && auth()->user()->isAdmin()) {
             return redirect()->route('managerListLetters', [
@@ -30,30 +36,32 @@ class LetterController extends Controller
     	
     }
 
-    public function postCreate(Request $req) {
+    public function postCreate(Request $req) { 
+        /* 
+        First, input validation. 
+        Then, if user attached the file, then the filename is generated.
+        Next, uses checkTime, if it returns true, the letter is posted,
+        otherwise, the message alert
+        */
 
-        // $validated = $req->validate([
-        //     'topic' => 'required|min:4',
-        //     'message' => 'required|min:10',
-        //     'file' => 'mimes:jpeg,jpg,png,pdf',
-        // ]);
+        $user_id = Auth::id();
         $this->validate($req, [
             'topic' => 'required|min:5',
             'message' => 'required|min:5',
             'file' => 'mimes:jpeg,jpg,png,pdf'
         ]);
 
-        $user_id = Auth::id();
-
-        $fileName = time().'.'.$req->file->extension();  
-        // $req->file->move(public_path('uploads'), $fileName);
+        if ($req->file != null) {
+            $fileName = time().'.'.$req->file->extension();  
+            $req->file->move(public_path('uploads'), $fileName);
+        }
             
-        if ($this->checkTime($user_id) && $req->file != null) {
+        if ($this->checkTime($user_id)) {
             $letter = new Letter([
                 'message' => $req->input('message'),
                 'topic' => $req->input('topic'),
-                'user_id' => Auth::id($user_id),
-                'file' => $fileName
+                'user_id' => $user_id,
+                'file' => (isset($fileName)) ? $fileName : null
             ]);
             $letter->save();
             return redirect()->route('ReadOwnLetter', [
@@ -65,12 +73,16 @@ class LetterController extends Controller
                 ->route('letterIndex')
                 ->with('msg', '24 hours has not passed yet');
         }
-        
-        
+            
     }
 
     public function managerListLetters(Request $req) {
-        if(Auth::user()->isAdmin()) {
+        /* 
+        If the user is manager, then he's allowed to go to /manager
+        and see all the messages
+        Otherwise Acess denied
+        */
+        if(Auth::user()->isAdmin() && auth()->check()) {
             $letters = Letter::all();
             return view('manager.index', [
                 'letters'=>$letters,
@@ -84,8 +96,11 @@ class LetterController extends Controller
         }
     }
 
-    public function managerPostLetters(Request $request, $id) {
-        $data = $request->only('topic','message','status', 'id', 'user_id');
+    public function managerPostLetters(Request $req, $id) {
+        /* 
+        Updates the letter, where status has been changed
+        */
+        $data = $req->only('topic','message','status', 'id', 'user_id');
         $letter = Letter::query()->findOrFail($id);
         $data['status'] = (!isset($data['status'])) ? 0 : 1;   
         $letter->update($data);
@@ -93,13 +108,24 @@ class LetterController extends Controller
     }
 
     public function ReadOwnLetter($id) {
+        /*
+        Shows the letter to an owner. 
+        Shows if manager answered the letter. 
+        */
         $letter = Letter::find($id);
-        return view('main.sent', [
-            'letter'=>$letter
-        ]);
+        if ($letter->status) {
+            return back()->with('msg', 'Your letter is answered');
+        }
+        else {
+            return back()->with('msg', 'Your letter is delivered');
+        }
     }
 
     public function checkTime($user_id) {
+        /* 
+        Checks if the 24 hours has passed since the last letter. 
+        If user has no any sent letters, then returns true (he can send a letter)
+        */
         if(Letter::where('user_id', $user_id)->exists()) {
             $lastLetter = Letter::orderBy('created_at', 'desc')->where( 'user_id', $user_id)->first();
             $lastLetterTime = $lastLetter->created_at;
@@ -118,11 +144,6 @@ class LetterController extends Controller
             return TRUE;
         }  
     } 
-    
-    public function updateLetterStatus(Request $request) {
-        $status = Letter::find($req->status);
-        $letter->status = $req->status;
-        $letter->save;
-    }
+
     
 }

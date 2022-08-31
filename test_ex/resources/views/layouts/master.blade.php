@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- CSS only -->
     <link href="{{ URL::to('css/bootstrap.css') }}" rel="stylesheet">
-    {{-- <link href="{{ URL::to('css/styles.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <title>Application</title>
 </head>
     <body>
