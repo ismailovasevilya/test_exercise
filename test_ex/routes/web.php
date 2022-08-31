@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
+// use App\Http\Middleware\isAdmin;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,35 +17,43 @@ use Illuminate\Validation\Factory;
 */
 
 
+// Route::middleware([isAdmin::class])->group(function(){
 
-Route::get('/', [
-	'uses' => 'App\Http\Controllers\LetterController@getIndex',
-	'as' => 'letterIndex'
-]);
 
-Route::post('/', [
-    'uses' => 'App\Http\Controllers\LetterController@postCreate',
-    'as' => 'postCreate'
-]);
+    Route::get('/', [
+        'uses' => 'App\Http\Controllers\LetterController@getIndex',
+        'as' => 'letterIndex'
+    ]);
 
-Route::get('/sent/{id}', [
-    'uses' => 'App\Http\Controllers\LetterController@ReadOwnLetter',
-    'as' => 'ReadOwnLetter'
-]);
+    Route::post('/', [
+        'uses' => 'App\Http\Controllers\LetterController@postCreate',
+        'as' => 'postCreate'
+    ]);
 
-Route::get('/manager', [
-    'uses' => 'App\Http\Controllers\LetterController@managerListLetters',
-    'as' => 'managerListLetters'
-]);
+    Route::get('/sent/{id}', [
+        'uses' => 'App\Http\Controllers\LetterController@ReadOwnLetter',
+        'as' => 'ReadOwnLetter'
+    ]);
 
-// Route::get('/manager', function () {
-//     return view('manager.index');
+    Route::get('/manager', [
+        'uses' => 'App\Http\Controllers\LetterController@managerListLetters',
+        'as' => 'managerListLetters'
+    ]);
+
+    Route::post('/manager/post/{id}', [
+        'uses' => 'App\Http\Controllers\LetterController@managerPostLetters',
+        'as' => 'managerPostLetters'
+    ]);
+
+    // Route::get('/manager', function () {
+    //     return view('manager.index');
+    // });
+
+    // Route::post('/create', [
+    //     'uses': 'App\Http\Controllers\'
+    // ]);
+
+    Auth::routes();
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // });
-
-// Route::post('/create', [
-//     'uses': 'App\Http\Controllers\'
-// ]);
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
