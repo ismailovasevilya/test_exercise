@@ -29,11 +29,17 @@
         <td>{{ $users->find($letter->user_id)->name }} </td>
         <td>{{ $users->find($letter->user_id)->email }}</td>
         <td>{{ $letter->file }}</td>
-        <td><input class="respond {{$letter->status == 1 ?'yes':'no'}}" 
+        <td>
+          <input class="respond {{$letter->status == 1 ?'yes':'no'}}" 
           type="submit" name="status" {{$letter->status == 1 ?'checked':''}} 
-          value="Respond"></td>
-      </form>
-    </tr>
+          value="Respond">
+        </td>
+        <td>
+          <a href="{{route('managerGetLetter', $letter->id) }}">Open</a>
+        </td>
+         </tr>
+    </form>
+ 
     @endforeach
 
     
@@ -41,7 +47,6 @@
   </tbody>
 </table>
 
-</script>
 
 @endsection
 

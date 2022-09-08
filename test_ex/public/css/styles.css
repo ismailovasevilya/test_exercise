@@ -5,3 +5,7 @@
 .no {
     background-color: yellow;
 }
+
+.readonly {
+    user-select: none;
+}

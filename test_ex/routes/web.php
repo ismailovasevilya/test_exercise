@@ -33,14 +33,27 @@ Route::get('/sent/{id}', [
     'as' => 'ReadOwnLetter'
 ]);
 
+Route::get('/letters/{id}', [
+    'uses' => 'App\Http\Controllers\LetterController@readAllLetters',
+    'as' => 'readAllLetters'
+]);
+
 Route::get('/manager', [
-    'uses' => 'App\Http\Controllers\LetterController@managerListLetters',
+    'uses' => 'App\Http\Controllers\ManagerController@managerListLetters',
     'as' => 'managerListLetters'
 ]);
 
 Route::post('/manager/post/{id}', [
-    'uses' => 'App\Http\Controllers\LetterController@managerPostLetters',
+    'uses' => 'App\Http\Controllers\ManagerController@managerPostLetters',
     'as' => 'managerPostLetters'
+]);
+Route::get('/manager/get/{id}', [
+    'uses' => 'App\Http\Controllers\ManagerController@managerGetLetter',
+    'as' => 'managerGetLetter'
+]);
+Route::post('/manager/respond/{id}', [
+    'uses' => 'App\Http\Controllers\ManagerController@respondLetter',
+    'as' => 'respondLetter'
 ]);
 
 Auth::routes();

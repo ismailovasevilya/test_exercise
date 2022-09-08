@@ -1,7 +1,9 @@
 @extends('layouts.master')
 @include('navs.error_block')
 @section('content')
-    <br><br><br>
+    <br><br>
+    <a href="{{ route('readAllLetters', Auth::id()) }}">All letters</a>
+    <br>
     <div class="form-group">
         <label for="topic">Topic</label>
         <textarea class="form-control" name="topic" form="postForm"></textarea>

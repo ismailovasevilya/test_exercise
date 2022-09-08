@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Letter extends Model
 {
-    protected $fillable = ['topic', 'message', 'status', 'user_id', 'file'];
+    protected $fillable = ['topic', 'message', 'status', 'user_id', 'file', 'response'];
     use HasFactory;
 
     public function user() {

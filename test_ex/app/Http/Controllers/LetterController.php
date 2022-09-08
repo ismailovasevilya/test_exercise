@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Letter;
 use App\Models\User;
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
@@ -76,38 +77,7 @@ class LetterController extends Controller
             
     }
 
-    public function managerListLetters(Request $req) {
-        /* 
-        If the user is manager, then he's allowed to go to /manager
-        and see all the messages
-        Otherwise Acess denied
-        */
-        if(Auth::user()->isAdmin() && auth()->check()) {
-            $letters = Letter::all();
-            return view('manager.index', [
-                'letters'=>$letters,
-                'users'=>Auth::user()
-            ]);
-        }
-        else {
-            return redirect()
-                ->route('letterIndex')
-                ->with('msg', 'Access denied');
-        }
-    }
-
-    public function managerPostLetters(Request $req, $id) {
-        /* 
-        Updates the letter, where status has been changed
-        */
-        $data = $req->only('topic','message','status', 'id', 'user_id');
-        $letter = Letter::query()->findOrFail($id);
-        $data['status'] = (!isset($data['status'])) ? 0 : 1;   
-        $letter->update($data);
-        return back()->with('Success','User updated successfully');
-    }
-
-    public function ReadOwnLetter($id) {
+   public function ReadOwnLetter($id) {
         /*
         Shows the letter to an owner. 
         Shows if manager answered the letter. 
@@ -119,6 +89,14 @@ class LetterController extends Controller
         else {
             return back()->with('msg', 'Your letter is delivered');
         }
+    }
+
+    public function readAllLetters() {
+        $letters = Letter::all()->where('user_id', Auth::id());
+        return view('main.sent', [
+            'letters'=>$letters
+        ]);
+   
     }
 
     public function checkTime($user_id) {

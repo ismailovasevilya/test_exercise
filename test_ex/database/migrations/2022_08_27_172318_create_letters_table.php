@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('file')->nullable();
             $table->boolean('status')->default(false);
             $table->integer('user_id');
+            $table->text('response')->nullable();
         });
     }
 
